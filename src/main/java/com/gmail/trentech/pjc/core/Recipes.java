@@ -29,7 +29,7 @@ public class Recipes {
 		}
 	}
 
-	private static ShapedRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
+	public static ShapedRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		Builder builder = Sponge.getRegistry().createBuilder(ShapedRecipe.Builder.class);
 
 		for(Entry<Object, ? extends ConfigurationNode> child : node.getChildrenMap().entrySet()) {
@@ -37,7 +37,9 @@ public class Recipes {
 			
 			String key = childNode.getKey().toString();
 			
-			if(key.equals("grid_size")) {
+			if (key.equals("enable") || key.equals("result")) {
+				continue;
+			} else if(key.equals("grid_size")) {
 				String[] size = childNode.getString().split("x");
 				
 				builder.dimensions(new Vector2i(Integer.parseInt(size[0]), Integer.parseInt(size[1])));
