@@ -264,16 +264,16 @@ public class Help implements Comparable<Help> {
 			if (optionalPermission.isPresent()) {
 				if (src.hasPermission(optionalPermission.get())) {
 					if (!help.getChildren().isEmpty()) {
-						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of(help.getRawCommand())).build());
 					} else {
-						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of(help.getRawCommand())).build());
 					}
 				}
 			} else {
 				if (!help.getChildren().isEmpty()) {
-					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of(help.getRawCommand())).build());
 				} else {
-					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of(help.getRawCommand())).build());
 				}
 			}
 		}

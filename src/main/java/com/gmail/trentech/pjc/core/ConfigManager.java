@@ -26,7 +26,7 @@ public class ConfigManager {
 	private ConfigManager(PluginContainer plugin, String configName) {
 		try {
 			//path = Main.instance().getPath().resolve(configName + ".conf");
-			path = Sponge.getGame().getConfigManager().getPluginConfig(plugin).getConfigPath().resolve(configName + ".conf");
+			path = Sponge.getGame().getConfigManager().getPluginConfig(plugin).getDirectory().resolve(configName + ".conf");
 			if (!Files.exists(path)) {
 				Files.createFile(path);
 				Main.instance().getLog().info("Creating new " + path.getFileName() + " file for " + plugin.getName());
@@ -43,10 +43,10 @@ public class ConfigManager {
 	}
 	
 	public static ConfigManager init(PluginContainer plugin, String configName) {
-		ConfigManager configManager = ConfigManager.get(plugin, configName);
+		ConfigManager configManager = new ConfigManager(plugin, configName);
 		CommentedConfigurationNode config = configManager.getConfig();
 		
-		if (configName.equalsIgnoreCase("config")) {
+		if (configName.equalsIgnoreCase(Main.getPlugin().getId())) {
 			if (config.getNode("theme", "pagination", "title").isVirtual()) {
 				config.getNode("theme", "pagination", "title", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
 				config.getNode("theme", "pagination", "title", "style").setValue("UNDERLINE").setComment("One or more(Comma seperated) of the following: BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED");
@@ -80,16 +80,18 @@ public class ConfigManager {
 		
 		configManager.save();
 
+		ConcurrentHashMap<String, ConfigManager> hash;
+		
 		if(!configManagers.containsKey(plugin.getId())) {
-			ConcurrentHashMap<String, ConfigManager> hash = new ConcurrentHashMap<>();
-			
-			hash.put(configName, configManager);
-			
-			configManagers.put(plugin.getId(), hash);
+			hash = new ConcurrentHashMap<>();
 		} else {
-			configManagers.get(plugin.getId()).put(configName, configManager);
+			hash = configManagers.get(plugin.getId());
 		}
-
+		
+		hash.put(configName, configManager);
+		
+		configManagers.put(plugin.getId(), hash);
+		
 		return configManager;
 	}
 	
