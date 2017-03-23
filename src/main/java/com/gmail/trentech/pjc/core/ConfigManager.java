@@ -25,7 +25,6 @@ public class ConfigManager {
 
 	private ConfigManager(PluginContainer plugin, String configName) {
 		try {
-			//path = Main.instance().getPath().resolve(configName + ".conf");
 			path = Sponge.getGame().getConfigManager().getPluginConfig(plugin).getDirectory().resolve(configName + ".conf");
 			if (!Files.exists(path)) {
 				Files.createFile(path);
@@ -75,6 +74,13 @@ public class ConfigManager {
 			if (config.getNode("theme", "values").isVirtual()) {
 				config.getNode("theme", "values", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
 				config.getNode("theme", "values", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+			}
+			if (config.getNode("settings", "sql").isVirtual()) {
+				config.getNode("settings", "sql", "enable").setValue(false);
+				config.getNode("settings", "sql", "prefix").setValue("NONE");
+				config.getNode("settings", "sql", "url").setValue("localhost:3306");
+				config.getNode("settings", "sql", "username").setValue("root");
+				config.getNode("settings", "sql", "password").setValue("password");
 			}
 		}
 		

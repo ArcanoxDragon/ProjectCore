@@ -17,7 +17,7 @@ import com.gmail.trentech.pjc.utils.InvalidItemTypeException;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
-public class Recipes {
+public class RecipeManager {
 
 	public static void register(ConfigurationNode node, ItemStack itemStack) {
 		Main.instance().getLog().info("Registering recipe for " + itemStack.getTranslation().get());

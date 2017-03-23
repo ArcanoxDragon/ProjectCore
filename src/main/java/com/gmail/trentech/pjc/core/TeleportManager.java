@@ -14,7 +14,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 
-public class Teleport {
+public class TeleportManager {
 
 	private static ThreadLocalRandom random = ThreadLocalRandom.current();
 
