@@ -41,7 +41,7 @@ public class SQLManager {
 
 	public static SQLManager get(PluginContainer plugin, String database) {
 		if(!sqlManagers.containsKey(plugin.getId()) || !sqlManagers.get(plugin.getId()).containsKey(database)) {
-			return init(plugin, plugin.getId());
+			return init(plugin, database);
 		}
 		
 		return sqlManagers.get(plugin.getId()).get(database);
