@@ -35,38 +35,47 @@ public class TeleportManager {
 	public static Optional<Location<World>> getSafeLocation(Location<World> location) {
 		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
 		
+		Optional<Location<World>> optionalLocation = Optional.of(location);
+		
 		first:
 		for(int i = 0; i < 10; i++) {
-			Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
-
 			if (!optionalLocation.isPresent()) {
+				optionalLocation = teleportHelper.getSafeLocation(location);
 				continue;
 			}
 			Location<World> unsafeLocation = optionalLocation.get();
 
-			if(!isInWorldBorder(unsafeLocation)) {
+			if(!isInWorldBorder(location)) {
+				optionalLocation = teleportHelper.getSafeLocation(location);
 				continue;
 			}
 			
 			BlockType blockType = unsafeLocation.getBlockType();
 			
 			if (!blockType.equals(BlockTypes.AIR) || !unsafeLocation.getRelative(Direction.UP).getBlockType().equals(BlockTypes.AIR)) {
+				optionalLocation = teleportHelper.getSafeLocation(location);
 				continue;
 			}
 
 			Location<World> floorLocation = unsafeLocation.getRelative(Direction.DOWN);
-			
-			for(int i2 = 0; i2 < 3; i2++) {
-				BlockType floorBlockType = floorLocation.getBlockType();
+
+			for(int i2 = 0; i2 < 4; i2++) {
+				if (floorLocation.getBlockType().equals(BlockTypes.AIR)) {
+					floorLocation = floorLocation.getRelative(Direction.DOWN);
+					continue;
+				}
 				
-		        if (unsafeBlocks.contains(floorBlockType)) {
+		        if (unsafeBlocks.contains(floorLocation.getBlockType())) {
+		        	optionalLocation = teleportHelper.getSafeLocation(location);
 		        	continue first;
 		        }
-				
-//				if (floorBlockType.equals(BlockTypes.WATER) || floorBlockType.equals(BlockTypes.LAVA) || floorBlockType.equals(BlockTypes.FLOWING_WATER) || floorBlockType.equals(BlockTypes.FLOWING_LAVA) || floorBlockType.equals(BlockTypes.FIRE)) {
-//					continue first;
-//				}
-				floorLocation = floorLocation.getRelative(Direction.DOWN);
+		        
+		        break;
+			}
+
+			if (floorLocation.getBlockType().equals(BlockTypes.AIR)) {
+				optionalLocation = teleportHelper.getSafeLocation(location);
+				continue;
 			}
 
 			unsafeLocation.getExtent().loadChunk(unsafeLocation.getChunkPosition(), true);
