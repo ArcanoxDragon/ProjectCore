@@ -2,46 +2,40 @@ package com.gmail.trentech.pjc.core;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Optional;
 
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.item.inventory.ItemStack;
+
+import com.google.common.reflect.TypeToken;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public class ItemSerializer {
 
-	public static String serialize(ItemStack itemStack) {
-		ConfigurationNode node = DataTranslators.CONFIGURATION_NODE.translate(itemStack.toContainer());
-
-		StringWriter stringWriter = new StringWriter();
-		
+	public static Optional<String> serialize(ItemStack item) {
 		try {
-			HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(stringWriter)).build().save(node);
-		} catch (IOException e) {
-			e.printStackTrace();
+			StringWriter sink = new StringWriter();
+			HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(sink)).build();
+			ConfigurationNode node = loader.createEmptyNode();
+			node.setValue(TypeToken.of(ItemStack.class), item);
+			loader.save(node);
+			return Optional.of(sink.toString());
+		} catch (Exception e) {
+			return Optional.empty();
 		}
-
-		return stringWriter.toString();
 	}
 
-	public static ItemStack deserialize(String item) {
-		ConfigurationNode node = null;
-		
+	public static Optional<ItemStack> deserialize(String item) {
 		try {
-			node = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(item))).build().load();
-		} catch (IOException e) {
+			StringReader source = new StringReader(item);
+			HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(source)).build();
+			return Optional.of(loader.load().getValue(TypeToken.of(ItemStack.class)));
+		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-
-		DataView dataView = DataTranslators.CONFIGURATION_NODE.translate(node);
-
-		return Sponge.getDataManager().deserialize(ItemStack.class, dataView).get();
 	}
-
 }

@@ -15,7 +15,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class SQLManager {
 
-	
 	private static ConcurrentHashMap<String, ConcurrentHashMap<String, SQLManager>> sqlManagers = new ConcurrentHashMap<>();
 
 	private PluginContainer plugin;
