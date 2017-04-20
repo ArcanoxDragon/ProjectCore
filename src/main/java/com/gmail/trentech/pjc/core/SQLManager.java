@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjc.core;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,6 +74,13 @@ public class SQLManager {
 		SqlService sqlService = Sponge.getServiceManager().provide(SqlService.class).get();
 		
 		if (mySql) {
+	        Connection connection = sqlService.getDataSource("jdbc:mysql://" + url + "/?user=" + username + "&password=" + password).getConnection();
+	        
+	        PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
+			statement.executeUpdate();
+			
+			connection.close();
+
 			return sqlService.getDataSource("jdbc:mysql://" + url + "/" + database + "?user=" + username + "&password=" + password);
 		} else {
 			return sqlService.getDataSource("jdbc:h2:./config/" + plugin.getId() + "/" + database);
