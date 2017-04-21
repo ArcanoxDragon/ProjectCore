@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
+import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -12,10 +13,12 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import com.gmail.trentech.pjc.commands.CMDHelp;
+import com.gmail.trentech.pjc.core.BungeeManager;
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.utils.Resource;
 import com.google.inject.Inject;
@@ -51,6 +54,14 @@ public class Main {
 
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, CMDHelp.cmdHelp, "helpme", "hm");
+	}
+	
+	@Listener
+	public void onStartingServerEvent(GameStartingServerEvent event) {
+		BungeeManager.channel = Sponge.getChannelRegistrar().createRawChannel(Main.getPlugin(), "pjc");
+		BungeeManager.listener = new BungeeManager.DataListener();
+				
+		BungeeManager.channel.addListener(Platform.Type.SERVER, BungeeManager.listener);	
 	}
 	
 	@Listener
