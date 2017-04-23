@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
-import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -13,7 +12,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -57,11 +56,8 @@ public class Main {
 	}
 	
 	@Listener
-	public void onStartingServerEvent(GameStartingServerEvent event) {
-		BungeeManager.channel = Sponge.getChannelRegistrar().createRawChannel(Main.getPlugin(), "pjc");
-		BungeeManager.listener = new BungeeManager.DataListener();
-				
-		BungeeManager.channel.addListener(Platform.Type.SERVER, BungeeManager.listener);	
+	public void onStartedServerEvent(GameStartedServerEvent event) {
+		BungeeManager.init();
 	}
 	
 	@Listener
