@@ -36,44 +36,55 @@ public class ConfigManager {
 
 		load();
 	}
-	
+
 	public static ConfigManager init(PluginContainer plugin) {
 		return init(plugin, plugin.getId());
 	}
-	
+
 	public static ConfigManager init(PluginContainer plugin, String configName) {
 		ConfigManager configManager = new ConfigManager(plugin, configName);
 		CommentedConfigurationNode config = configManager.getConfig();
-		
+
 		if (configName.equalsIgnoreCase(Main.getPlugin().getId())) {
 			if (config.getNode("theme", "pagination", "title").isVirtual()) {
 				config.getNode("theme", "pagination", "title", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
 				config.getNode("theme", "pagination", "title", "style").setValue("UNDERLINE").setComment("One or more(Comma seperated) of the following: BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED");
 			}
 			if (config.getNode("theme", "pagination", "padding").isVirtual()) {
-				config.getNode("theme", "pagination", "padding", "color").setValue(TextColors.DARK_GREEN.getName()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
+				config.getNode("theme", "pagination", "padding", "color").setValue(TextColors.DARK_GREEN.getName()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
 				config.getNode("theme", "pagination", "padding", "style").setValue("STRIKETHROUGH,BOLD").setComment("One or more(Comma seperated) of the following: BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED");
 				config.getNode("theme", "pagination", "padding", "text").setValue("=").setComment("Characters the padding will be made of");
 			}
 			if (config.getNode("theme", "list").isVirtual()) {
-				config.getNode("theme", "list", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
-				config.getNode("theme", "list", "style").setValue("ITALIC").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+				config.getNode("theme", "list", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
+				config.getNode("theme", "list", "style").setValue("ITALIC").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");
+				;
 			}
 			if (config.getNode("theme", "content").isVirtual()) {
-				config.getNode("theme", "content", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
-				config.getNode("theme", "content", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+				config.getNode("theme", "content", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
+				config.getNode("theme", "content", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");
+				;
 			}
 			if (config.getNode("theme", "headers").isVirtual()) {
-				config.getNode("theme", "headers", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
-				config.getNode("theme", "headers", "style").setValue("BOLD").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+				config.getNode("theme", "headers", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
+				config.getNode("theme", "headers", "style").setValue("BOLD").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");
+				;
 			}
 			if (config.getNode("theme", "keys").isVirtual()) {
-				config.getNode("theme", "keys", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
-				config.getNode("theme", "keys", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+				config.getNode("theme", "keys", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
+				config.getNode("theme", "keys", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");
+				;
 			}
 			if (config.getNode("theme", "values").isVirtual()) {
-				config.getNode("theme", "values", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
-				config.getNode("theme", "values", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
+				config.getNode("theme", "values", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				;
+				config.getNode("theme", "values", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");
+				;
 			}
 			if (config.getNode("settings", "sql").isVirtual()) {
 				config.getNode("settings", "sql", "enable").setValue(false);
@@ -83,29 +94,29 @@ public class ConfigManager {
 				config.getNode("settings", "sql", "password").setValue("password");
 			}
 		}
-		
+
 		configManager.save();
 
 		ConcurrentHashMap<String, ConfigManager> hash;
-		
-		if(!configManagers.containsKey(plugin.getId())) {
+
+		if (!configManagers.containsKey(plugin.getId())) {
 			hash = new ConcurrentHashMap<>();
 		} else {
 			hash = configManagers.get(plugin.getId());
 		}
-		
+
 		hash.put(configName, configManager);
-		
+
 		configManagers.put(plugin.getId(), hash);
-		
+
 		return configManager;
 	}
-	
+
 	public static ConfigManager get(PluginContainer plugin, String configName) {
-		if(!configManagers.containsKey(plugin.getId()) || !configManagers.get(plugin.getId()).containsKey(configName)) {
+		if (!configManagers.containsKey(plugin.getId()) || !configManagers.get(plugin.getId()).containsKey(configName)) {
 			return init(plugin, configName);
 		}
-		
+
 		return configManagers.get(plugin.getId()).get(configName);
 	}
 

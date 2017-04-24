@@ -26,11 +26,11 @@ public class SQLManager {
 	private String prefix;
 	private String username;
 	private String password;
-	
+
 	private SQLManager(PluginContainer plugin, String database) {
 		this.plugin = plugin;
 		this.database = database;
-		
+
 		ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
 
 		this.mySql = config.getNode("settings", "sql", "enable").getBoolean();
@@ -41,44 +41,44 @@ public class SQLManager {
 	}
 
 	public static SQLManager get(PluginContainer plugin, String database) {
-		if(!sqlManagers.containsKey(plugin.getId()) || !sqlManagers.get(plugin.getId()).containsKey(database)) {
+		if (!sqlManagers.containsKey(plugin.getId()) || !sqlManagers.get(plugin.getId()).containsKey(database)) {
 			return init(plugin, database);
 		}
-		
+
 		return sqlManagers.get(plugin.getId()).get(database);
 	}
 
 	public static SQLManager get(PluginContainer plugin) {
 		return SQLManager.get(plugin, plugin.getId());
 	}
-	
+
 	private static SQLManager init(PluginContainer plugin, String database) {
 		SQLManager sqlManager = new SQLManager(plugin, database);
 
 		ConcurrentHashMap<String, SQLManager> hash;
-		
-		if(!sqlManagers.containsKey(plugin.getId())) {
+
+		if (!sqlManagers.containsKey(plugin.getId())) {
 			hash = new ConcurrentHashMap<>();
 		} else {
 			hash = sqlManagers.get(plugin.getId());
 		}
-		
+
 		hash.put(database, sqlManager);
-		
+
 		sqlManagers.put(plugin.getId(), hash);
-		
+
 		return sqlManager;
 	}
-	
+
 	public DataSource getDataSource() throws SQLException {
 		SqlService sqlService = Sponge.getServiceManager().provide(SqlService.class).get();
-		
+
 		if (mySql) {
-	        Connection connection = sqlService.getDataSource("jdbc:mysql://" + url + "/?user=" + username + "&password=" + password).getConnection();
-	        
-	        PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
+			Connection connection = sqlService.getDataSource("jdbc:mysql://" + url + "/?user=" + username + "&password=" + password).getConnection();
+
+			PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
 			statement.executeUpdate();
-			
+
 			connection.close();
 
 			return sqlService.getDataSource("jdbc:mysql://" + url + "/" + database + "?user=" + username + "&password=" + password);

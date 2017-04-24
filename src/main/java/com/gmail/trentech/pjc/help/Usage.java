@@ -6,16 +6,16 @@ import java.util.List;
 public class Usage {
 
 	private List<Argument> arguments = new ArrayList<>();
-	
+
 	public Usage(Argument argument) {
 		arguments.add(argument);
 	}
-	
+
 	public Usage addArgument(Argument argument) {
 		arguments.add(argument);
 		return this;
 	}
-	
+
 	public List<Argument> getArguments() {
 		return arguments;
 	}

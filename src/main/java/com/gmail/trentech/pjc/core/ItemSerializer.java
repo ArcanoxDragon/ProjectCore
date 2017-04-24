@@ -10,7 +10,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import com.google.common.reflect.TypeToken;
 
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public class ItemSerializer {
@@ -19,9 +18,8 @@ public class ItemSerializer {
 		try {
 			StringWriter sink = new StringWriter();
 			HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(sink)).build();
-			ConfigurationNode node = loader.createEmptyNode();
-			node.setValue(TypeToken.of(ItemStack.class), item);
-			loader.save(node);
+			loader.save(loader.createEmptyNode().setValue(TypeToken.of(ItemStack.class), item));
+
 			return Optional.of(sink.toString());
 		} catch (Exception e) {
 			return Optional.empty();
@@ -30,8 +28,8 @@ public class ItemSerializer {
 
 	public static Optional<ItemStack> deserialize(String item) {
 		try {
-			StringReader source = new StringReader(item);
-			HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(source)).build();
+			HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(item))).build();
+
 			return Optional.of(loader.load().getValue(TypeToken.of(ItemStack.class)));
 		} catch (Exception e) {
 			e.printStackTrace();

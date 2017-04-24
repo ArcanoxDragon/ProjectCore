@@ -54,17 +54,17 @@ public class Main {
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, CMDHelp.cmdHelp, "helpme", "hm");
 	}
-	
+
 	@Listener
 	public void onStartedServerEvent(GameStartedServerEvent event) {
 		BungeeManager.init();
 	}
-	
+
 	@Listener
 	public void onReloadEvent(GameReloadEvent event) {
 		ConfigManager.init(getPlugin());
 	}
-	
+
 	public Logger getLog() {
 		return log;
 	}

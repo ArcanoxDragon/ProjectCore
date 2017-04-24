@@ -30,21 +30,21 @@ public class BungeeManager {
 	public static void init() {
 		Sponge.getChannelRegistrar().getOrCreateRaw(Main.getPlugin(), "BungeeCord").addListener(Platform.Type.SERVER, listener);
 	}
-	
+
 	private static ChannelBinding.RawDataChannel getChannel() {
 		ChannelRegistrar channelRegistrar = Sponge.getChannelRegistrar();
-		
+
 		ChannelBinding.RawDataChannel channel;
-		if(!channelRegistrar.getChannel("BungeeCord").isPresent()) {
+		if (!channelRegistrar.getChannel("BungeeCord").isPresent()) {
 			channel = channelRegistrar.getOrCreateRaw(Main.getPlugin(), "BungeeCord");
 			channel.addListener(Platform.Type.SERVER, listener);
 		} else {
 			channel = channelRegistrar.getOrCreateRaw(Main.getPlugin(), "BungeeCord");
 		}
-		
+
 		return channel;
 	}
-	
+
 	public static void connect(Player player, String server) {
 		getChannel().sendTo(player, buffer -> buffer.writeUTF("Connect").writeUTF(server));
 	}
@@ -56,7 +56,7 @@ public class BungeeManager {
 	public static void kickPlayer(String player, Text reason, Player reference) {
 		getChannel().sendTo(reference, buffer -> buffer.writeUTF("KickPlayer").writeUTF(player).writeUTF(TextSerializers.FORMATTING_CODE.serialize(reason)));
 	}
-	
+
 	public static void message(String player, Text message, Player reference) {
 		getChannel().sendTo(reference, buffer -> buffer.writeUTF("Message").writeUTF(player).writeUTF(TextSerializers.FORMATTING_CODE.serialize(message)));
 	}
@@ -75,7 +75,7 @@ public class BungeeManager {
 		getChannel().sendTo(player, buffer -> buffer.writeUTF("IP"));
 		listener.map.put(buffer -> buffer.resetRead().readUTF().equals("IP"), buffer -> consumer.accept(new InetSocketAddress(buffer.readUTF(), buffer.readInteger())));
 	}
-	
+
 	public static void getServers(Consumer<List<String>> consumer, Player reference) {
 		getChannel().sendTo(reference, buffer -> buffer.writeUTF("GetServers"));
 		listener.map.put(buffer -> buffer.resetRead().readUTF().equals("GetServers"), buffer -> consumer.accept(ImmutableList.<String>builder().add(buffer.readUTF().split(", ")).build()));

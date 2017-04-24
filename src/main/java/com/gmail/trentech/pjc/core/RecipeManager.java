@@ -21,7 +21,7 @@ public class RecipeManager {
 
 	public static void register(ConfigurationNode node, ItemStack itemStack) {
 		Main.instance().getLog().info("Registering recipe for " + itemStack.getTranslation().get());
-		
+
 		try {
 			Sponge.getRegistry().getRecipeRegistry().register(getShapedRecipe(node, itemStack));
 		} catch (InvalidItemTypeException e) {
@@ -32,24 +32,24 @@ public class RecipeManager {
 	public static ShapedRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		Builder builder = Sponge.getRegistry().createBuilder(ShapedRecipe.Builder.class);
 
-		for(Entry<Object, ? extends ConfigurationNode> child : node.getChildrenMap().entrySet()) {
+		for (Entry<Object, ? extends ConfigurationNode> child : node.getChildrenMap().entrySet()) {
 			ConfigurationNode childNode = child.getValue();
-			
+
 			String key = childNode.getKey().toString();
-			
+
 			if (key.equals("enable") || key.equals("result")) {
 				continue;
-			} else if(key.equals("grid_size")) {
+			} else if (key.equals("grid_size")) {
 				String[] size = childNode.getString().split("x");
-				
+
 				builder.dimensions(new Vector2i(Integer.parseInt(size[0]), Integer.parseInt(size[1])));
-			}else {
+			} else {
 				String itemId = childNode.getString();
 				String[] args = itemId.split(":");
-				
+
 				Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, itemId);
-				
-				if(optionalItemType.isPresent()) {
+
+				if (optionalItemType.isPresent()) {
 					ItemStack itemStack = ItemStack.builder().itemType(optionalItemType.get()).build();
 
 					if (args.length == 3) {
@@ -62,7 +62,7 @@ public class RecipeManager {
 					String[] grid = key.split("x");
 
 					builder.ingredient(new Vector2i(Integer.parseInt(grid[0]), Integer.parseInt(grid[1])), itemStack);
-				}else {
+				} else {
 					throw new InvalidItemTypeException("ItemType in config.conf at " + childNode.getKey().toString() + " is invalid");
 				}
 			}

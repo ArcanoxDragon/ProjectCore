@@ -91,7 +91,7 @@ public class Help implements Comparable<Help> {
 
 	public Text getUsageText() {
 		Text command = Text.of("Usage: /", getRawCommand());
-		
+
 		Optional<Usage> optionalUsage = getUsage();
 
 		if (optionalUsage.isPresent()) {
@@ -114,19 +114,19 @@ public class Help implements Comparable<Help> {
 				}
 			}
 		}
-		
+
 		return Text.of(TextColors.RED, command);
 	}
-	
+
 	public void execute(CommandSource src) {
 		ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
 
-		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "headers", "color").getString()).get();	
+		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "headers", "color").getString()).get();
 		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "content", "color").getString()).get();
-		
+
 		TextStyle headersStyle = Help.getStyle(config.getNode("theme", "headers", "style"));
 		TextStyle contentStyle = Help.getStyle(config.getNode("theme", "content", "style"));
-		
+
 		List<Text> list = new ArrayList<>();
 
 		list.add(Text.of(headersStyle, headersColor, "Description:"));
@@ -203,9 +203,9 @@ public class Help implements Comparable<Help> {
 
 		TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 		TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
-		
+
 		Text paddingText = Text.of(config.getNode("theme", "pagination", "padding", "text").getString());
-		
+
 		List<String> examples = getExamples();
 
 		if (!examples.isEmpty()) {
@@ -215,31 +215,32 @@ public class Help implements Comparable<Help> {
 				list.add(Text.of(contentStyle, contentColor, " ", example));
 			}
 		}
-		
+
 		PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
 	}
 
 	private static TextStyle getStyle(ConfigurationNode node) {
 		TextStyle style = TextStyles.NONE;
-		
+
 		String[] styles = node.getString().split(",");
-		
-		for(int i = 0; i < styles.length; i++) {
-			if(styles[i].equalsIgnoreCase("BOLD")) {
+
+		for (int i = 0; i < styles.length; i++) {
+			if (styles[i].equalsIgnoreCase("BOLD")) {
 				style = style.and(TextStyles.BOLD);
-			} else if(styles[i].equalsIgnoreCase("ITALIC")) {
+			} else if (styles[i].equalsIgnoreCase("ITALIC")) {
 				style = style.and(TextStyles.ITALIC);
-			} else if(styles[i].equalsIgnoreCase("OBFUSCATED")) {
+			} else if (styles[i].equalsIgnoreCase("OBFUSCATED")) {
 				style = style.and(TextStyles.OBFUSCATED);
-			} else if(styles[i].equalsIgnoreCase("UNDERLINE")) {
+			} else if (styles[i].equalsIgnoreCase("UNDERLINE")) {
 				style = style.and(TextStyles.UNDERLINE);
-			} else if(styles[i].equalsIgnoreCase("STRIKETHROUGH")) {
+			} else if (styles[i].equalsIgnoreCase("STRIKETHROUGH")) {
 				style = style.and(TextStyles.STRIKETHROUGH);
 			}
 		}
-		
+
 		return style;
 	}
+
 	public Consumer<CommandSource> execute() {
 		return (CommandSource src) -> {
 			execute(src);
@@ -255,7 +256,7 @@ public class Help implements Comparable<Help> {
 
 		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "list", "color").getString()).get();
 		TextStyle listStyle = Help.getStyle(config.getNode("theme", "list", "style"));
-		
+
 		List<Text> pages = new ArrayList<>();
 
 		for (Help help : array) {
@@ -284,12 +285,12 @@ public class Help implements Comparable<Help> {
 
 			TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 			TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
-			
+
 			Text paddingText = Text.of(config.getNode("theme", "pagination", "padding", "text").getString());
-			
+
 			if (src instanceof Player) {
 				if ((pages.size() > 18) && (pages.size() % 18 != 0)) {
-					while(pages.size() % 18 != 0) {
+					while (pages.size() % 18 != 0) {
 						pages.add(Text.of(" "));
 					}
 				}
@@ -342,13 +343,13 @@ public class Help implements Comparable<Help> {
 	}
 
 	public static void register(Help help) {
-		for(Help h : Lists.newArrayList(list)) {
-			if(h.getRawCommand().equals(help.getRawCommand())) {
+		for (Help h : Lists.newArrayList(list)) {
+			if (h.getRawCommand().equals(help.getRawCommand())) {
 				list.remove(h);
 				break;
 			}
 		}
-		
+
 		list.add(help);
 	}
 
