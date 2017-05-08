@@ -17,7 +17,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class SQLManager {
 
-	private static ConcurrentHashMap<String, ConcurrentHashMap<String, SQLManager>> sqlManagers = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, SQLManager> sqlManagers = new ConcurrentHashMap<>();
 
 	private PluginContainer plugin;
 	private String database;
@@ -27,47 +27,73 @@ public class SQLManager {
 	private String username;
 	private String password;
 
-	private SQLManager(PluginContainer plugin, String database) {
+	private SQLManager(PluginContainer plugin) {
 		this.plugin = plugin;
-		this.database = database;
 
-		ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
-
-		this.mySql = config.getNode("settings", "sql", "enable").getBoolean();
-		this.prefix = config.getNode("settings", "sql", "prefix").getString();
-		this.url = config.getNode("settings", "sql", "url").getString();
-		this.username = config.getNode("settings", "sql", "username").getString();
-		this.password = config.getNode("settings", "sql", "password").getString();
+		initSettings();
 	}
 
-	public static SQLManager get(PluginContainer plugin, String database) {
-		if (!sqlManagers.containsKey(plugin.getId()) || !sqlManagers.get(plugin.getId()).containsKey(database)) {
-			return init(plugin, database);
-		}
-
-		return sqlManagers.get(plugin.getId()).get(database);
-	}
-
-	public static SQLManager get(PluginContainer plugin) {
-		return SQLManager.get(plugin, plugin.getId());
-	}
-
-	private static SQLManager init(PluginContainer plugin, String database) {
-		SQLManager sqlManager = new SQLManager(plugin, database);
-
-		ConcurrentHashMap<String, SQLManager> hash;
-
-		if (!sqlManagers.containsKey(plugin.getId())) {
-			hash = new ConcurrentHashMap<>();
+	public void initSettings() {
+		ConfigManager configManager = ConfigManager.get(plugin);
+		ConfigurationNode config = configManager.getConfig();
+		
+		ConfigurationNode defaultConfig = ConfigManager.get(Main.getPlugin()).getConfig();
+		
+		if(config.getNode("settings", "sql", "enable").isVirtual()) {
+			this.mySql = config.getNode("settings", "sql", "enable").setValue(defaultConfig.getNode("settings", "sql", "enable").getBoolean()).getBoolean();
 		} else {
-			hash = sqlManagers.get(plugin.getId());
+			this.mySql = config.getNode("settings", "sql", "enable").getBoolean();
+		}
+		
+		if(config.getNode("settings", "sql", "prefix").isVirtual()) {
+			this.prefix = config.getNode("settings", "sql", "prefix").setValue(defaultConfig.getNode("settings", "sql", "prefix").getString()).getString();
+		} else {
+			this.prefix = config.getNode("settings", "sql", "prefix").getString();
+		}
+		
+		if(config.getNode("settings", "sql", "url").isVirtual()) {
+			this.url = config.getNode("settings", "sql", "url").setValue(defaultConfig.getNode("settings", "sql", "url").getString()).getString();
+		} else {
+			this.url = config.getNode("settings", "sql", "url").getString();
+		}
+		
+		if(config.getNode("settings", "sql", "username").isVirtual()) {
+			this.username = config.getNode("settings", "sql", "username").setValue(defaultConfig.getNode("settings", "sql", "username").getString()).getString();
+		} else {
+			this.username = config.getNode("settings", "sql", "username").getString();
+		}
+		
+		if(config.getNode("settings", "sql", "password").isVirtual()) {
+			this.password = config.getNode("settings", "sql", "password").setValue(defaultConfig.getNode("settings", "sql", "password").getString()).getString();
+		} else {
+			this.password = config.getNode("settings", "sql", "password").getString();
+		}
+		
+		if(config.getNode("settings", "sql", "database").isVirtual()) {
+			this.database = config.getNode("settings", "sql", "database").setValue(plugin.getId()).getString();
+		} else {
+			this.database = config.getNode("settings", "sql", "database").getString();
+		}
+		
+		configManager.save();
+	}
+	
+	public static SQLManager get(PluginContainer plugin) {
+		if (!sqlManagers.containsKey(plugin.getId())) {
+			return init(plugin);
 		}
 
-		hash.put(database, sqlManager);
+		return sqlManagers.get(plugin.getId());
+	}
 
-		sqlManagers.put(plugin.getId(), hash);
-
-		return sqlManager;
+	private static SQLManager init(PluginContainer plugin) {
+		if (!sqlManagers.containsKey(plugin.getId())) {
+			SQLManager sqlManager = new SQLManager(plugin);
+			
+			return sqlManagers.put(plugin.getId(), sqlManager);
+		} else {
+			return sqlManagers.get(plugin.getId());
+		}
 	}
 
 	public DataSource getDataSource() throws SQLException {

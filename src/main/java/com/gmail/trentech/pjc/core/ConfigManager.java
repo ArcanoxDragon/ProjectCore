@@ -87,6 +87,7 @@ public class ConfigManager {
 				;
 			}
 			if (config.getNode("settings", "sql").isVirtual()) {
+				config.getNode("settings", "sql").setComment("Default database values for all PJP dependant plugins. Can be overridden in specified plugin configs");
 				config.getNode("settings", "sql", "enable").setValue(false);
 				config.getNode("settings", "sql", "prefix").setValue("NONE");
 				config.getNode("settings", "sql", "url").setValue("localhost:3306");
