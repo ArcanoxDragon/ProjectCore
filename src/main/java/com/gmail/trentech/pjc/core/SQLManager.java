@@ -80,20 +80,11 @@ public class SQLManager {
 	
 	public static SQLManager get(PluginContainer plugin) {
 		if (!sqlManagers.containsKey(plugin.getId())) {
-			return init(plugin);
-		}
-
-		return sqlManagers.get(plugin.getId());
-	}
-
-	private static SQLManager init(PluginContainer plugin) {
-		if (!sqlManagers.containsKey(plugin.getId())) {
 			SQLManager sqlManager = new SQLManager(plugin);
-			
-			return sqlManagers.put(plugin.getId(), sqlManager);
-		} else {
-			return sqlManagers.get(plugin.getId());
+			sqlManagers.put(plugin.getId(), sqlManager);
 		}
+		
+		return sqlManagers.get(plugin.getId());
 	}
 
 	public DataSource getDataSource() throws SQLException {
