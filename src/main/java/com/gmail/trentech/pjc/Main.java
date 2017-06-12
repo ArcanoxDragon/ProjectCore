@@ -16,12 +16,12 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.gmail.trentech.pjc.commands.CMDHelp;
+import com.gmail.trentech.pjc.commands.CMDPJC;
 import com.gmail.trentech.pjc.core.BungeeManager;
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.utils.Resource;
 import com.google.inject.Inject;
-// TEST
+
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL)
 public class Main {
 
@@ -52,7 +52,7 @@ public class Main {
 		ConfigManager.init(getPlugin());
 
 		Sponge.getEventManager().registerListeners(this, new EventListener());
-		Sponge.getCommandManager().register(this, CMDHelp.cmdHelp, "helpme", "hm");
+		Sponge.getCommandManager().register(this, new CMDPJC().getCommand(), "pjc", "helpme", "hm");
 	}
 
 	@Listener
