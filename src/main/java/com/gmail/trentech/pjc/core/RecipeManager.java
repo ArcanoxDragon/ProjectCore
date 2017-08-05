@@ -33,7 +33,7 @@ public class RecipeManager {
 		}
 	}
 
-	public static ItemStack getItem(String item) throws InvalidItemTypeException {
+	public static ItemStack getItemStack(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
 		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, args[0] + ":" + args[1]);
@@ -54,6 +54,18 @@ public class RecipeManager {
 		}
 	}
 
+	public static ItemType getItemType(String item) throws InvalidItemTypeException {
+		String[] args = item.split(":");
+
+		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, args[0] + ":" + args[1]);
+
+		if (optionalItemType.isPresent()) {
+			return optionalItemType.get();
+		} else {
+			throw new InvalidItemTypeException("ItemType in config.conf at " + item + " is invalid");
+		}
+	}
+	
 	public static ShapedCraftingRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		RowsStep rows = ShapedCraftingRecipe.builder().rows();
 		
@@ -66,9 +78,17 @@ public class RecipeManager {
 				String item = row1[i1];
 				
 				if(item.equalsIgnoreCase("NONE")) {
-					ingredients.add(Ingredient.builder().with(ItemStack.of(ItemTypes.NONE, 1)).build());
+					ingredients.add(Ingredient.builder().with(ItemTypes.NONE).build());
 				} else {
-					ingredients.add(Ingredient.builder().with(getItem(item)).build());
+					if(item.split(":").length == 3) {
+						ItemStack itemStack = getItemStack(item);
+						
+						ingredients.add(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
+					} else {
+						ItemType itemType = getItemType(item);
+						
+						ingredients.add(Ingredient.builder().with(itemType).withDisplay(itemType).build());
+					}				
 				}
 			}
 
@@ -88,8 +108,15 @@ public class RecipeManager {
 			ResultStep resultStep = null;
 			
 			for(String item : node.getNode("ingredients").getList(TypeToken.of(String.class))) {
-				ItemStack itemStack = getItem(item);
-				resultStep = builder.addIngredient(Ingredient.builder().with(itemStack).build());
+				if(item.split(":").length == 3) {
+					ItemStack itemStack = getItemStack(item);
+					
+					resultStep = builder.addIngredient(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
+				} else {
+					ItemType itemType = getItemType(item);
+					
+					resultStep = builder.addIngredient(Ingredient.builder().with(itemType).withDisplay(itemType).build());
+				}				
 			}
 			
 			return resultStep.result(result).build("pjc:" + node.getNode("id").getString(), Main.getPlugin());
@@ -101,9 +128,12 @@ public class RecipeManager {
 	
 	public static SmeltingRecipe getSmeltingRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		String item = node.getNode("ingredient").getString();
+
+		if(item.split(":").length == 3) {
+			return SmeltingRecipe.builder().ingredient(getItemStack(item)).result(result).build();
+		} else {
+			return SmeltingRecipe.builder().ingredient(getItemType(item)).result(result).build();
+		}	
 		
-		ItemStack itemStack = getItem(item);
-		
-		return SmeltingRecipe.builder().ingredient(itemStack).result(result).build();
 	}
 }
