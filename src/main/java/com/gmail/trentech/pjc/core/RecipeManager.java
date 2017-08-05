@@ -27,7 +27,7 @@ public class RecipeManager {
 
 	public static void register(ConfigurationNode node, ItemStack result) {
 		try {
-			Sponge.getRegistry().getCraftingRecipeRegistry().register(getShapedRecipe(node, "pjc:" + node.getNode("id").getString(), result));
+			Sponge.getRegistry().getCraftingRecipeRegistry().register(getShapedRecipe(node, result));
 		} catch (InvalidItemTypeException e) {
 			e.printStackTrace();
 		}
@@ -45,16 +45,16 @@ public class RecipeManager {
 				DataContainer container = itemStack.toContainer();
 				DataQuery query = DataQuery.of('/', "UnsafeDamage");
 				container.set(query, Integer.parseInt(args[2]));
-				itemStack.setRawData(container);
+				itemStack = Sponge.getDataManager().deserialize(ItemStack.class, container).get();
 			}
-			
+
 			return itemStack;
 		} else {
 			throw new InvalidItemTypeException("ItemType in config.conf at " + item + " is invalid");
 		}
 	}
 
-	public static ShapedCraftingRecipe getShapedRecipe(ConfigurationNode node, String id, ItemStack result) throws InvalidItemTypeException {
+	public static ShapedCraftingRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		RowsStep rows = ShapedCraftingRecipe.builder().rows();
 		
 		for(int i = 1; i < 4; i++) {
@@ -73,7 +73,7 @@ public class RecipeManager {
 			}
 
 			if(i == 3) {
-				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).build(id, Main.getPlugin());
+				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).build("pjc:" + node.getNode("id").getString(), Main.getPlugin());
 			}
 			
 			rows.row(ingredients.toArray(new Ingredient[0]));
