@@ -28,7 +28,7 @@ blossom {
 	replaceToken '@project.url@', project.url, path
 }
 
-archivesBaseName = "${project.name.toLowerCase()}-${project.apiVersion.split("-")[0]}"
+archivesBaseName = "projectcore-${project.apiVersion.split("-")[0]}"
 
 configurations {
     shade
