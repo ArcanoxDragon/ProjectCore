@@ -6,8 +6,6 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "projectcore-${project.apiVersion.split("-")[0]}"
-
 repositories {
     mavenCentral()
     maven {
@@ -29,6 +27,8 @@ blossom {
 	replaceToken '@project.author@', project.author, path
 	replaceToken '@project.url@', project.url, path
 }
+
+archivesBaseName = "projectcore-${project.apiVersion.split("-")[0]}"
 
 configurations {
     shade

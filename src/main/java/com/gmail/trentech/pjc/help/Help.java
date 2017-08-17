@@ -216,7 +216,7 @@ public class Help implements Comparable<Help> {
 			}
 		}
 
-		PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
+		PaginationList.builder().padding(Text.builder().style(paddingStyle).color(paddingColor).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
 	}
 
 	private static TextStyle getStyle(ConfigurationNode node) {

@@ -14,10 +14,18 @@ import org.spongepowered.api.text.Text;
 import com.gmail.trentech.pjc.commands.elements.HelpElement;
 import com.gmail.trentech.pjc.help.Help;
 
-public class CMDHelp implements CommandExecutor {
+public class CMDPJC implements CommandExecutor {
 
-	public static CommandSpec cmdHelp = CommandSpec.builder().description(Text.of(" Get help with commands registered with this plugin")).permission("helpme.cmd").arguments(GenericArguments.optional(GenericArguments.allOf(new HelpElement(Text.of("rawCommand"))))).executor(new CMDHelp()).build();
+	private CommandSpec cmd; 
 
+	public CMDPJC() {
+		this.cmd = CommandSpec.builder().description(Text.of(" Get help with commands registered with ProjectCore.")).arguments(GenericArguments.optional(GenericArguments.allOf(new HelpElement(Text.of("rawCommand"))))).executor(this).build();
+	}
+	
+	public CommandSpec getCommand() {
+		return this.cmd;
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (args.hasAny("rawCommand")) {

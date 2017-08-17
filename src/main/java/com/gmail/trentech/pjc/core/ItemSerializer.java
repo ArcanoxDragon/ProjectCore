@@ -33,7 +33,7 @@ public class ItemSerializer {
 			return Optional.of(loader.load().getValue(TypeToken.of(ItemStack.class)));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return Optional.empty();
 		}
 	}
 }
