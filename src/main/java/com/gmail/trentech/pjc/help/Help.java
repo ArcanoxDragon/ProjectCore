@@ -114,8 +114,8 @@ public class Help implements Comparable<Help> {
 				}
 			}
 		}
-
-		return Text.of(TextColors.RED, command);
+		
+		return Text.builder().color(TextColors.RED).onClick(TextActions.executeCallback(execute())).append(command).build();
 	}
 
 	public void execute(CommandSource src) {
