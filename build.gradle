@@ -40,9 +40,9 @@ dependencies {
     compile "org.spongepowered:spongeapi:${project.apiVersion}"
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//   sign configurations.archives
+//}
 
 jar {
     configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
