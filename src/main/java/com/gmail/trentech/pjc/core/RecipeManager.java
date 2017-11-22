@@ -25,9 +25,9 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public class RecipeManager {
 
-	public static void register(ConfigurationNode node, ItemStack result) {
+	public static void register(String pluginId, ConfigurationNode node, ItemStack result) {
 		try {
-			Sponge.getRegistry().getCraftingRecipeRegistry().register(getShapedRecipe(node, result));
+			Sponge.getRegistry().getCraftingRecipeRegistry().register(getShapedRecipe(pluginId, node, result));
 		} catch (InvalidItemTypeException e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,7 @@ public class RecipeManager {
 		}
 	}
 	
-	public static ShapedCraftingRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
+	public static ShapedCraftingRecipe getShapedRecipe(String pluginId, ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		RowsStep rows = ShapedCraftingRecipe.builder().rows();
 		
 		for(int i = 1; i < 4; i++) {
@@ -93,7 +93,7 @@ public class RecipeManager {
 			}
 
 			if(i == 3) {
-				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).build("pjc:" + node.getNode("id").getString(), Main.getPlugin());
+				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).build(pluginId + ":" + node.getNode("id").getString(), Main.getPlugin());
 			}
 			
 			rows.row(ingredients.toArray(new Ingredient[0]));
@@ -101,7 +101,7 @@ public class RecipeManager {
 		return null;
 	}
 	
-	public static ShapelessCraftingRecipe getShapelessRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
+	public static ShapelessCraftingRecipe getShapelessRecipe(String pluginId, ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		try {
 			ShapelessCraftingRecipe.Builder builder = ShapelessCraftingRecipe.builder();
 			
@@ -119,7 +119,7 @@ public class RecipeManager {
 				}				
 			}
 			
-			return resultStep.result(result).build("pjc:" + node.getNode("id").getString(), Main.getPlugin());
+			return resultStep.result(result).build(pluginId + ":" + node.getNode("id").getString(), Main.getPlugin());
 		} catch (ObjectMappingException e) {
 			e.printStackTrace();
 			return null;
