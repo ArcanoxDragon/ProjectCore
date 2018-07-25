@@ -92,7 +92,11 @@ public class ConfigManager {
 				config.getNode("settings", "sql", "prefix").setValue("NONE");
 				config.getNode("settings", "sql", "url").setValue("localhost:3306");
 				config.getNode("settings", "sql", "username").setValue("root");
-				config.getNode("settings", "sql", "password").setValue("password");
+				config.getNode("settings", "sql", "password").setValue("password");			
+			}
+			if (config.getNode("settings", "help-message").isVirtual()) {
+				config.getNode("settings", "help-message", "enable").setValue("true");
+				config.getNode("settings", "help-message", "first-join-only").setValue("false");
 			}
 		}
 
