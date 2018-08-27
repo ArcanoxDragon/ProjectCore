@@ -3,6 +3,7 @@ package com.gmail.trentech.pjc.core;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
@@ -36,7 +37,8 @@ public class RecipeManager {
 	public static ItemStack getItemStack(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
-		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, args[0] + ":" + args[1]);
+		CatalogKey key = CatalogKey.of(args[0], args[1]);
+		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, key);
 
 		if (optionalItemType.isPresent()) {
 			ItemStack itemStack = ItemStack.builder().itemType(optionalItemType.get()).build();
@@ -57,7 +59,8 @@ public class RecipeManager {
 	public static ItemType getItemType(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
-		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, args[0] + ":" + args[1]);
+		CatalogKey key = CatalogKey.of(args[0], args[1]);
+		Optional<ItemType> optionalItemType = Sponge.getRegistry().getType(ItemType.class, key);
 
 		if (optionalItemType.isPresent()) {
 			return optionalItemType.get();
