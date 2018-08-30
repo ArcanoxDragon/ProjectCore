@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -122,11 +121,11 @@ public class Help implements Comparable<Help> {
 	public void execute(CommandSource src) {
 		ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
 
-		String[] headerArgs = config.getNode("theme", "headers", "color").getString().split(":");
-		String[] contentArgs = config.getNode("theme", "content", "color").getString().split(":");
+		String header = config.getNode("theme", "headers", "color").getString();
+		String content = config.getNode("theme", "content", "color").getString();
 		
-		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(headerArgs[0], headerArgs[1])).get();
-		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(contentArgs[0], contentArgs[1])).get();
+		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, header).get();
+		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, content).get();
 
 		TextStyle headersStyle = Help.getStyle(config.getNode("theme", "headers", "style"));
 		TextStyle contentStyle = Help.getStyle(config.getNode("theme", "content", "style"));
@@ -202,11 +201,11 @@ public class Help implements Comparable<Help> {
 			list.add(Text.of(contentStyle, contentColor, command));
 		}
 
-		String[] paddingArgs = config.getNode("theme", "pagination", "padding", "color").getString().split(":");
-		String[] titleArgs = config.getNode("theme", "pagination", "title", "color").getString().split(":");
+		String padding = config.getNode("theme", "pagination", "padding", "color").getString();
+		String title = config.getNode("theme", "pagination", "title", "color").getString();
 		
-		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(paddingArgs[0], paddingArgs[1])).get();
-		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(titleArgs[0], titleArgs[1])).get();
+		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, padding).get();
+		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, title).get();
 
 		TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 		TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
@@ -261,9 +260,9 @@ public class Help implements Comparable<Help> {
 
 		ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
 
-		String[] listArgs = config.getNode("theme", "list", "color").getString().split(":");
+		String color = config.getNode("theme", "list", "color").getString();
 		
-		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(listArgs[0], listArgs[1])).get();
+		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, color).get();
 		TextStyle listStyle = Help.getStyle(config.getNode("theme", "list", "style"));
 
 		List<Text> pages = new ArrayList<>();
@@ -289,11 +288,11 @@ public class Help implements Comparable<Help> {
 		}
 
 		if (!pages.isEmpty()) {
-			String[] paddingArgs = config.getNode("theme", "pagination", "padding", "color").getString().split(":");
-			String[] titleArgs = config.getNode("theme", "pagination", "title", "color").getString().split(":");
+			String padding = config.getNode("theme", "pagination", "padding", "color").getString();
+			String title = config.getNode("theme", "pagination", "title", "color").getString();
 			
-			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(paddingArgs[0], paddingArgs[1])).get();
-			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, CatalogKey.of(titleArgs[0], titleArgs[1])).get();
+			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, padding).get();
+			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, title).get();
 
 			TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 			TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
