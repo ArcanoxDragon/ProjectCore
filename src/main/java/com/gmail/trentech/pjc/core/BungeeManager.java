@@ -1,5 +1,8 @@
 package com.gmail.trentech.pjc.core;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,40 @@ public class BungeeManager {
 		return channel;
 	}
 
+	public static void forward(Player player, String server, String channel, String data) {
+		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
+		DataOutputStream msgout = new DataOutputStream(msgbytes);
+		try {
+			msgout.writeUTF(data);
+		} catch (IOException exception){
+			exception.printStackTrace();
+		}
+		
+		getChannel().sendTo(player, buffer -> buffer.writeUTF("Forward").writeUTF(server).writeUTF(channel).writeByteArray(msgbytes.toByteArray()));
+	}
+	
+	public static void forwardResponse(String server, Consumer<byte[]> consumer, Player reference) {
+		getChannel().sendTo(reference, buffer -> buffer.writeUTF("Forward").writeUTF(server));
+		listener.map.put(buffer -> buffer.resetRead().readUTF().equals("Forward") && buffer.readUTF().equals(server), buffer -> consumer.accept(buffer.readByteArray()));
+	}
+	
+	public static void forwardPlayer(Player player, String server, String channel, String data) {
+		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
+		DataOutputStream msgout = new DataOutputStream(msgbytes);
+		try {
+			msgout.writeUTF(data);
+		} catch (IOException exception){
+			exception.printStackTrace();
+		}
+		
+		getChannel().sendTo(player, buffer -> buffer.writeUTF("ForwardToPlayer").writeUTF(player.getName()).writeUTF(channel).writeByteArray(msgbytes.toByteArray()));
+	}
+	
+	public static void forwardPlayerResponse(String server, Consumer<byte[]> consumer, Player reference) {
+		getChannel().sendTo(reference, buffer -> buffer.writeUTF("ForwardToPlayer").writeUTF(server));
+		listener.map.put(buffer -> buffer.resetRead().readUTF().equals("ForwardToPlayer") && buffer.readUTF().equals(server), buffer -> consumer.accept(buffer.readByteArray()));
+	}
+	
 	public static void connect(Player player, String server) {
 		getChannel().sendTo(player, buffer -> buffer.writeUTF("Connect").writeUTF(server));
 	}
