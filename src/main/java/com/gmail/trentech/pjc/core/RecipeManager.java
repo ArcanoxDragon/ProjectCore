@@ -16,7 +16,6 @@ import org.spongepowered.api.item.recipe.crafting.ShapelessCraftingRecipe;
 import org.spongepowered.api.item.recipe.crafting.ShapelessCraftingRecipe.Builder.ResultStep;
 import org.spongepowered.api.item.recipe.smelting.SmeltingRecipe;
 
-import com.gmail.trentech.pjc.Main;
 import com.gmail.trentech.pjc.utils.InvalidItemTypeException;
 import com.google.common.reflect.TypeToken;
 
@@ -25,14 +24,58 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public class RecipeManager {
 
-	public static void register(String pluginId, ConfigurationNode node, ItemStack result) {
+	private static ArrayList<ShapedCraftingRecipe> shapedRecipes = new ArrayList<>();
+	private static ArrayList<ShapelessCraftingRecipe> shapelessRecipes = new ArrayList<>();
+	private static ArrayList<SmeltingRecipe> smeltingRecipes = new ArrayList<>();
+	
+	public static ArrayList<ShapedCraftingRecipe> getShapedRecipes() {
+		return shapedRecipes;
+	}
+	
+	public static ArrayList<ShapelessCraftingRecipe> getShapelessCraftingRecipes() {
+		return shapelessRecipes;
+	}
+	
+	public static ArrayList<SmeltingRecipe> getSmeltingRecipes() {
+		return smeltingRecipes;
+	}
+	
+	public static void registerShaped(ConfigurationNode node, ItemStack result) {
+		ShapedCraftingRecipe recipe;
 		try {
-			Sponge.getRegistry().getCraftingRecipeRegistry().register(getShapedRecipe(pluginId, node, result));
+			recipe = getShapedRecipe(node, result);
 		} catch (InvalidItemTypeException e) {
+			
 			e.printStackTrace();
+			return;
 		}
+		shapedRecipes.add(recipe);
 	}
 
+	public static void registerShapeless(ConfigurationNode node, ItemStack result) {
+		ShapelessCraftingRecipe recipe;
+		try {
+			recipe = getShapelessRecipe(node, result);
+		} catch (InvalidItemTypeException e) {
+			
+			e.printStackTrace();
+			return;
+		}
+		shapelessRecipes.add(recipe);
+	}
+	
+	public static void registerSmelting(ConfigurationNode node, ItemStack result) {
+		SmeltingRecipe recipe;
+		try {
+			recipe = getSmeltingRecipe(node, result);
+		} catch (InvalidItemTypeException e) {
+			
+			e.printStackTrace();
+			return;
+		}
+		smeltingRecipes.add(recipe);
+	}
+	
 	public static ItemStack getItemStack(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
@@ -64,7 +107,7 @@ public class RecipeManager {
 		}
 	}
 	
-	public static ShapedCraftingRecipe getShapedRecipe(String pluginId, ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
+	public static ShapedCraftingRecipe getShapedRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		RowsStep rows = ShapedCraftingRecipe.builder().rows();
 		
 		for(int i = 1; i < 4; i++) {
@@ -91,7 +134,7 @@ public class RecipeManager {
 			}
 
 			if(i == 3) {
-				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).build(pluginId + ":" + node.getNode("id").getString(), Main.getPlugin());
+				return rows.row(ingredients.toArray(new Ingredient[0])).result(result).id(node.getNode("id").getString()).build();
 			}
 			
 			rows.row(ingredients.toArray(new Ingredient[0]));
@@ -99,7 +142,7 @@ public class RecipeManager {
 		return null;
 	}
 	
-	public static ShapelessCraftingRecipe getShapelessRecipe(String pluginId, ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
+	public static ShapelessCraftingRecipe getShapelessRecipe(ConfigurationNode node, ItemStack result) throws InvalidItemTypeException {
 		try {
 			ShapelessCraftingRecipe.Builder builder = ShapelessCraftingRecipe.builder();
 			
@@ -117,7 +160,7 @@ public class RecipeManager {
 				}				
 			}
 			
-			return resultStep.result(result).build(pluginId + ":" + node.getNode("id").getString(), Main.getPlugin());
+			return resultStep.result(result).id(node.getNode("id").getString()).build();
 		} catch (ObjectMappingException e) {
 			e.printStackTrace();
 			return null;

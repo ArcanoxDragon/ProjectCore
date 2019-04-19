@@ -7,11 +7,16 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.TabCompleteEvent;
+import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.recipe.crafting.ShapedCraftingRecipe;
+import org.spongepowered.api.item.recipe.crafting.ShapelessCraftingRecipe;
+import org.spongepowered.api.item.recipe.smelting.SmeltingRecipe;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.core.RecipeManager;
 import com.gmail.trentech.pjc.help.Help;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -26,6 +31,24 @@ public class EventListener {
 			for (Help help : Help.getParents()) {
 				event.getTabCompletions().add(help.getCommand());
 			}
+		}
+	}
+	
+	public void onGameRegistryShapedRecipeEvent(GameRegistryEvent.Register<ShapedCraftingRecipe> event) {
+		for(ShapedCraftingRecipe recipe : RecipeManager.getShapedRecipes()) {
+			event.register(recipe);
+		}
+	}
+	
+	public void onGameRegistryShapelessRecipeEvent(GameRegistryEvent.Register<ShapelessCraftingRecipe> event) {
+		for(ShapelessCraftingRecipe recipe : RecipeManager.getShapelessCraftingRecipes()) {
+			event.register(recipe);
+		}
+	}
+	
+	public void onGameRegistryEvent(GameRegistryEvent.Register<SmeltingRecipe> event) {
+		for(SmeltingRecipe recipe : RecipeManager.getSmeltingRecipes()) {
+			event.register(recipe);
 		}
 	}
 	
