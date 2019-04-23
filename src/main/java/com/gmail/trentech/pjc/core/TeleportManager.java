@@ -84,7 +84,7 @@ public class TeleportManager {
 
 		for (int i = 0; i < 20; i++) {
 			double x = (random.nextDouble() * (radius * 2) - radius) + spawnLocation.getBlockX();
-			double y = random.nextDouble(59, 200 + 1);
+			double y = random.nextDouble(0, 255);
 			double z = (random.nextDouble() * (radius * 2) - radius) + spawnLocation.getBlockZ();
 
 			Optional<Location<World>> optionalLocation = getSafeLocation(world.getLocation(x, y, z));
