@@ -3,7 +3,6 @@ package com.gmail.trentech.pjc.core;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -16,8 +15,6 @@ import com.gmail.trentech.pjc.Main;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class SQLManager {
-
-	private static ConcurrentHashMap<String, SQLManager> sqlManagers = new ConcurrentHashMap<>();
 
 	private PluginContainer plugin;
 	private String database;
@@ -79,12 +76,7 @@ public class SQLManager {
 	}
 	
 	public static SQLManager get(PluginContainer plugin) {
-		if (!sqlManagers.containsKey(plugin.getId())) {
-			SQLManager sqlManager = new SQLManager(plugin);
-			sqlManagers.put(plugin.getId(), sqlManager);
-		}
-		
-		return sqlManagers.get(plugin.getId());
+		return new SQLManager(plugin);
 	}
 
 	public DataSource getDataSource() throws SQLException {
@@ -95,7 +87,7 @@ public class SQLManager {
 
 			PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
 			statement.executeUpdate();
-
+			statement.close();
 			connection.close();
 
 			return sqlService.getDataSource("jdbc:mysql://" + url + "/" + database + "?user=" + username + "&password=" + password);
