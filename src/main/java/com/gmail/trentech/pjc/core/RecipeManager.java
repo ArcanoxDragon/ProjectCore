@@ -2,6 +2,7 @@ package com.gmail.trentech.pjc.core;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -24,6 +25,8 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public class RecipeManager {
 
+	public static ConcurrentHashMap<String, ItemStack> customItems = new ConcurrentHashMap<>();
+	
 	public static ItemStack getItemStack(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
@@ -69,7 +72,11 @@ public class RecipeManager {
 				if(item.equalsIgnoreCase("NONE")) {
 					ingredients.add(Ingredient.builder().with(ItemTypes.NONE).build());
 				} else {
-					if(item.split(":").length == 3) {
+					if(customItems.containsKey(item)) {
+						ItemStack itemStack = customItems.get(item);
+						
+						ingredients.add(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
+					} else if(item.split(":").length == 3) {
 						ItemStack itemStack = getItemStack(item);
 						
 						ingredients.add(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
@@ -97,7 +104,11 @@ public class RecipeManager {
 			ResultStep resultStep = null;
 			
 			for(String item : node.getNode("ingredients").getList(TypeToken.of(String.class))) {
-				if(item.split(":").length == 3) {
+				if(customItems.containsKey(item)) {
+					ItemStack itemStack = customItems.get(item);
+					
+					resultStep = builder.addIngredient(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
+				} else if(item.split(":").length == 3) {
 					ItemStack itemStack = getItemStack(item);
 					
 					resultStep = builder.addIngredient(Ingredient.builder().with(itemStack).withDisplay(itemStack).build());
