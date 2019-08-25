@@ -24,58 +24,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public class RecipeManager {
 
-	private static ArrayList<ShapedCraftingRecipe> shapedRecipes = new ArrayList<>();
-	private static ArrayList<ShapelessCraftingRecipe> shapelessRecipes = new ArrayList<>();
-	private static ArrayList<SmeltingRecipe> smeltingRecipes = new ArrayList<>();
-	
-	public static ArrayList<ShapedCraftingRecipe> getShapedRecipes() {
-		return shapedRecipes;
-	}
-	
-	public static ArrayList<ShapelessCraftingRecipe> getShapelessCraftingRecipes() {
-		return shapelessRecipes;
-	}
-	
-	public static ArrayList<SmeltingRecipe> getSmeltingRecipes() {
-		return smeltingRecipes;
-	}
-	
-	public static void registerShaped(ConfigurationNode node, ItemStack result) {
-		ShapedCraftingRecipe recipe;
-		try {
-			recipe = getShapedRecipe(node, result);
-		} catch (InvalidItemTypeException e) {
-			
-			e.printStackTrace();
-			return;
-		}
-		shapedRecipes.add(recipe);
-	}
-
-	public static void registerShapeless(ConfigurationNode node, ItemStack result) {
-		ShapelessCraftingRecipe recipe;
-		try {
-			recipe = getShapelessRecipe(node, result);
-		} catch (InvalidItemTypeException e) {
-			
-			e.printStackTrace();
-			return;
-		}
-		shapelessRecipes.add(recipe);
-	}
-	
-	public static void registerSmelting(ConfigurationNode node, ItemStack result) {
-		SmeltingRecipe recipe;
-		try {
-			recipe = getSmeltingRecipe(node, result);
-		} catch (InvalidItemTypeException e) {
-			
-			e.printStackTrace();
-			return;
-		}
-		smeltingRecipes.add(recipe);
-	}
-	
 	public static ItemStack getItemStack(String item) throws InvalidItemTypeException {
 		String[] args = item.split(":");
 
@@ -174,7 +122,6 @@ public class RecipeManager {
 			return SmeltingRecipe.builder().ingredient(getItemStack(item)).result(result).build();
 		} else {
 			return SmeltingRecipe.builder().ingredient(getItemType(item)).result(result).build();
-		}	
-		
+		}		
 	}
 }
