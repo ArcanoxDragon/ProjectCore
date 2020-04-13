@@ -84,11 +84,14 @@ public class SQLManager {
 
 		if (mySql) {
 			Connection connection = sqlService.getDataSource("jdbc:mysql://" + url + "/?user=" + username + "&password=" + password).getConnection();
+			PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS `" + database + "`");
 
-			PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
-			statement.executeUpdate();
-			statement.close();
-			connection.close();
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+				connection.close();
+			}
 
 			return sqlService.getDataSource("jdbc:mysql://" + url + "/" + database + "?user=" + username + "&password=" + password);
 		} else {
